@@ -1,0 +1,9 @@
+Connect Docker agent to jenkins Docker
+
+1-docker exec -it $(jenkins_container_name) curl -sO http://$(jenkins_container_name):8080/jnlpJars/agent.jar
+example
+docker exec -it ci_cd_jenkins_linux_agent curl -sO http://ci_cd_jenkins:8080/jnlpJars/agent.jar
+
+2-docker exec -it $(jenkins_container_name) java -jar agent.jar -url http://$(jenkins_container_name):8080/ -secret $(node_secret_key) -name "$(node_agent_name)" -webSocket -workDir "/home/jenkins/agent"
+example
+docker exec -it ci_cd_jenkins_linux_agent java -jar agent.jar -url http://172.29.96.123:8080/ -secret b76e000fdec7f1533ce6a310048d3a66bf0dbbdd8174509eb80b3e97419532c5 -name "Docker-Agent" -webSocket -workDir "/home/jenkins/agent"
