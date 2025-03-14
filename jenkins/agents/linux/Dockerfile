@@ -36,7 +36,7 @@ RUN mv sonar-scanner-6.1.0.4477-linux-x64 /opt/sonar-scanner
 # Install RATS checker
 RUN wget https://github.com/andrew-d/rough-auditing-tool-for-security/archive/refs/heads/master.zip
 RUN unzip master.zip
-WORKDIR /rough-auditing-tool-for-security-master
+WORKDIR ${HOME}/rough-auditing-tool-for-security-master
 # RUN chmod u+x configure
 RUN ./configure
 RUN make
