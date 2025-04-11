@@ -27,10 +27,6 @@ services:
     user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - JENKINS_URL=http://172.17.0.1:8080/
-      - JENKINS_AGENT_NAME=Docker-Agent-Linux
-      - JENKINS_SECRET=1f34693f9d1e9da4698863e4364155329f36bd0eb28a5a007aed7e0f81e6f1eb
 
   windows_agent:
     container_name: ci_cd_jenkins_windows_agent
@@ -44,10 +40,38 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     tty: true
+    # environment:
+    #   - JENKINS_URL=http://172.17.0.1:8080/
+    #   - JENKINS_AGENT_NAME=Docker-Agent-Windows
+    #   - JENKINS_SECRET=6eb092631e70cddee8b9906627cc6a4b8af3a7ef5d181aca79e93198e10ad240
+
+  windows_11:
+    image: dockurr/windows
+    container_name: windows_11
+    networks:
+      - ci_cd
+    devices:
+      - /dev/kvm
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006
+      - 3389:3389/tcp
+      - 3389:3389/udp
+    stop_grace_period: 2m
+    restart: on-failure
+    tty: true
     environment:
-      - JENKINS_URL=http://172.17.0.1:8080/
-      - JENKINS_AGENT_NAME=Docker-Agent-Windows
-      - JENKINS_SECRET=6eb092631e70cddee8b9906627cc6a4b8af3a7ef5d181aca79e93198e10ad240
+      VERSION: "win11"
+      RAM_SIZE: "2.5G"
+      CPU_CORES: "4"
+      DISK_SIZE: "90G"
+      KVM: "N"
+      CONSOLE: "Y"
+      HV: "N"
+    volumes:
+      - /var/win:/storage
+      - /var/run/docker.sock:/var/run/docker.sock
 
   sonarqube:
     container_name: ci_cd_sonar

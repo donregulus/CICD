@@ -1,8 +1,9 @@
-FROM jenkins/inbound-agent
+FROM ubuntu:24.04
 LABEL Description="Build environment"
 
 USER root
 ENV HOME /home/jenkins
+
 
 SHELL ["/bin/bash", "-c"]
 
@@ -25,7 +26,11 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
     python3 \
     python3-pip \    
     clang-tidy \
-    valgrind && \
+    curl \
+    openjdk-17-jdk \
+    vim \    
+    valgrind && \  
+    rm -rf /var/lib/apt/lists/*  &&\
     apt-get clean 
 
 # Install sonar scanner
@@ -36,8 +41,7 @@ RUN mv sonar-scanner-6.1.0.4477-linux-x64 /opt/sonar-scanner
 # Install RATS checker
 RUN wget https://github.com/andrew-d/rough-auditing-tool-for-security/archive/refs/heads/master.zip
 RUN unzip master.zip
-WORKDIR ${HOME}/rough-auditing-tool-for-security-master
-# RUN chmod u+x configure
+WORKDIR  rough-auditing-tool-for-security-master
 RUN ./configure
 RUN make
 RUN make install
@@ -45,3 +49,8 @@ RUN make install
 # Install python tools
 RUN rm /usr/lib/python*/EXTERNALLY-MANAGED && \  
     pip3 install gcovr conan
+
+# Start Agent
+COPY start-agent.sh /start-agent.sh
+RUN chmod +x /start-agent.sh
+ENTRYPOINT ["/start-agent.sh"]
