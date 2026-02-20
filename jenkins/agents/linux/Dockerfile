@@ -11,7 +11,12 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get update && apt-get -y --no-install-recommends install \
     ca-certificates \
     build-essential \
-    clang \ 
+    clang \
+    clang-18 \
+    llvm-18 \
+    llvm-18-dev \
+    llvm-18-runtime \
+    libclang-rt-18-dev \
     cmake \
     gdb \
     git\  
@@ -33,11 +38,6 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
     rm -rf /var/lib/apt/lists/*  &&\
     apt-get clean 
 
-# Install sonar scanner
-RUN wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux-x64.zip 
-RUN unzip sonar-scanner-cli-6.1.0.4477-linux-x64.zip 
-RUN mv sonar-scanner-6.1.0.4477-linux-x64 /opt/sonar-scanner
-
 # Install RATS checker
 RUN wget https://github.com/andrew-d/rough-auditing-tool-for-security/archive/refs/heads/master.zip
 RUN unzip master.zip
@@ -48,7 +48,7 @@ RUN make install
 
 # Install python tools
 RUN rm /usr/lib/python*/EXTERNALLY-MANAGED && \  
-    pip3 install gcovr conan
+    pip3 install gcovr conan  pycobertura
 
 # Start Agent
 COPY start-agent.sh /start-agent.sh
