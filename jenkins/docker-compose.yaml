@@ -87,7 +87,7 @@ services:
 
   sonarqube-database:
     container_name: ci_cd_database
-    image: postgres
+    image: postgres:18.2
     networks:
       - ci_cd
     environment:
@@ -95,15 +95,14 @@ services:
       - POSTGRES_USER=sonarqube
       - POSTGRES_PASSWORD=sonarpass
     volumes:
-      - sonarqube_database:/var/lib/postgresql
-      # - sonarqube_database_data:/var/lib/postgresql/data
+      - sonarqube_database:/var/lib/postgresql      
     restart: always
     ports:
       - 5432:5432
 
   nexus:
     container_name: ci_cd_nexus
-    image: sonatype/nexus3
+    image: sonatype/nexus3:3.89.1
     restart: always
     volumes:
       - nexus-data:/sonatype-work
@@ -115,14 +114,12 @@ volumes:
   sonarqube_conf:
   sonarqube_data:
   sonarqube_extensions:
-  sonarqube_database:
-  # sonarqube_database_data:
+  sonarqube_database:  
   certs:
   vhost:
   html:
   acme:  
   nexus-data: {}
-
 
 networks:
    ci_cd:
