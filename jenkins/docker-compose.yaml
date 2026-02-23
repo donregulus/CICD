@@ -1,5 +1,35 @@
 version: "3.9"
 services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: ci_cd_nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certs:/etc/nginx/certs:ro
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - ci_cd
+    restart: always
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: ci_cd_nginx-proxy-acme
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - ci_cd
+    restart: always
+    depends_on:
+      - nginx-proxy
+
   jenkins:
     build:
       dockerfile: Dockerfile
@@ -12,9 +42,14 @@ services:
       - 8080:8080
       - 50000:50000
     container_name: ci_cd_jenkins
+    environment:
+      - VIRTUAL_HOST=cicd.stroalgo.net
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=cicd.stroalgo.net
+      - LETSENCRYPT_EMAIL=stroalgo@gmail.com
     volumes:
       - ~/jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock  
 
   linux_agent:
     container_name: ci_cd_jenkins_linux_agent
@@ -27,51 +62,8 @@ services:
     user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
-  windows_agent:
-    container_name: ci_cd_jenkins_windows_agent
-    build:
-      dockerfile: Dockerfile
-      context: ./agents/windows
-    networks:
-      - ci_cd
-    restart: always
-    user: root
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    tty: true
-    # environment:
-    #   - JENKINS_URL=http://172.17.0.1:8080/
-    #   - JENKINS_AGENT_NAME=Docker-Agent-Windows
-    #   - JENKINS_SECRET=6eb092631e70cddee8b9906627cc6a4b8af3a7ef5d181aca79e93198e10ad240
-
-  windows_11:
-    image: dockurr/windows
-    container_name: windows_11
-    networks:
-      - ci_cd
-    devices:
-      - /dev/kvm
-    cap_add:
-      - NET_ADMIN
-    ports:
-      - 8006:8006
-      - 3389:3389/tcp
-      - 3389:3389/udp
-    stop_grace_period: 2m
-    restart: on-failure
-    tty: true
-    environment:
-      VERSION: "win11"
-      RAM_SIZE: "2.5G"
-      CPU_CORES: "4"
-      DISK_SIZE: "90G"
-      KVM: "N"
-      CONSOLE: "Y"
-      HV: "N"
-    volumes:
-      - /var/win:/storage
-      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - jenkins
 
   sonarqube:
     container_name: ci_cd_sonar
@@ -104,7 +96,7 @@ services:
       - POSTGRES_PASSWORD=sonarpass
     volumes:
       - sonarqube_database:/var/lib/postgresql
-      - sonarqube_database_data:/var/lib/postgresql/data
+      # - sonarqube_database_data:/var/lib/postgresql/data
     restart: always
     ports:
       - 5432:5432
@@ -119,13 +111,19 @@ services:
       - 8081:8081
 
 volumes:
-  sonarqube_database_data:
   sonarqube_bundled-plugins:
   sonarqube_conf:
   sonarqube_data:
-  sonarqube_database:
   sonarqube_extensions:
+  sonarqube_database:
+  # sonarqube_database_data:
+  certs:
+  vhost:
+  html:
+  acme:  
   nexus-data: {}
 
+
 networks:
-  ci_cd:
+   ci_cd:
+    name:  ci_cd
