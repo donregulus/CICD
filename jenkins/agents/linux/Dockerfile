@@ -12,6 +12,7 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
     ca-certificates \
     build-essential \
     clang \
+    llvm \
     clang-18 \
     llvm-18 \
     llvm-18-dev \
