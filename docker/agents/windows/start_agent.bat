@@ -1,0 +1,2 @@
+curl.exe -sO http://localhost:8080/jnlpJars/agent.jar
+java -jar agent.jar -url http://localhost:8080/ -secret 49025913f8711db609c2550e683d6c07b486bad9feb935f35c39fe3f78ece1ec -name "Physical-Agent-Windows" -webSocket -workDir "C:\Users\Siebenou\Documents\Jenkins_Agent"

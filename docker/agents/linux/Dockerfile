@@ -51,6 +51,9 @@ RUN make install
 RUN rm /usr/lib/python*/EXTERNALLY-MANAGED && \  
     pip3 install gcovr conan  pycobertura
 
+# Create conan default profile
+RUN conan profile detect 
+
 # Start Agent
 COPY start-agent.sh /start-agent.sh
 RUN chmod +x /start-agent.sh
