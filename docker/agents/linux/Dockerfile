@@ -18,6 +18,7 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
     llvm-18-dev \
     llvm-18-runtime \
     libclang-rt-18-dev \
+    lcov \
     cmake \
     gdb \
     git\  
