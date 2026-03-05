@@ -1,0 +1,50 @@
+# ============================================
+# OpenSSL Configuration for Jenkins Local SSL Certificate
+# ============================================
+# This file generates a certificate trusted by modern browsers
+# ============================================
+# 📅 Created: March 5, 2026
+# 🏷️ Valid for: 825 days()
+
+[req]
+default_bits = 2048          # 2048-bit RSA key (standard)
+prompt = no                  # Don't prompt - read from this file
+default_md = sha256          # SHA-256 hashing (modern standard)
+distinguished_name = dn      # Where to find certificate identity
+req_extensions = req_ext     # Where to find extensions
+x509_extensions = req_ext    # Same extensions for self-signed
+
+[dn]
+# ============================================
+# Distinguished Name (Certificate Identity)
+# ============================================
+C  = FR                           # Country code (two letters)
+ST = ILE-DE-FRANCE                # State/Province (can be generic)
+L  = MELUN                        # Locality/City
+O  = Stroalgo Local Lab           # Organization/Company name
+OU = DevOps                       # Organizational Unit (optional)
+CN = cicd.stroalgo.com            # ⚠️ CRITICAL: Must match browser URL!
+emailAddress = stroalgo@gmail.com # Optional contact email
+
+[req_ext]
+# ============================================
+# Certificate Extensions
+# ============================================
+basicConstraints = CA:FALSE           # This is NOT a CA (security)
+subjectAltName = @alt_names           # Subject Alternative Names - REQUIRED for Chrome/Firefox!
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+
+
+[alt_names]
+# ============================================
+# Subject Alternative Names (SANs)
+# List EVERY way you'll access Jenkins
+# ============================================
+# Add all the domain names and IPs you use to access Jenkins
+DNS.1 = cicd.stroalgo.com  # Primary domain
+DNS.2 = localhost          # Local access
+DNS.3 = jenkins            # Docker service name (if you use it internally)
+
+# IP addresses
+IP.1 = 127.0.0.1        # Localhost
+IP.2 = 172.18.107.207   # Current wsl IP (ip addr show eth0 [ grep 'inet'])
