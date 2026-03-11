@@ -28,6 +28,7 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
     unzip \
     cppcheck \
     clang-tools \
+    clang-format \
     libexpat1 \
     libexpat1-dev \  
     python3 \
@@ -50,7 +51,7 @@ RUN make install
 
 # Install python tools
 RUN rm /usr/lib/python*/EXTERNALLY-MANAGED && \  
-    pip3 install gcovr conan  pycobertura
+    pip3 install gcovr conan  pycobertura pre-commit
 
 # Create conan default profile
 RUN conan profile detect 
