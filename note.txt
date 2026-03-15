@@ -25,3 +25,6 @@ Import the certificate CA (stroalgoCA.crt)used to sign jenkins server certificat
     2.4-The Certificate Import Wizard will open. Click Next.
     2.5-Click Browse and select the stroalgoCA.crt file you moved to your Downloads folder. (You may need to change the file type filter to "All Files" to see it). Click Next.
     2.6-Ensure it says "Place all certificates in the following store: Trusted Root Certification Authorities". Click Next, then Finish.
+3. Update Host
+    3.1- Open C:\Windows\System32\drivers\etc\hosts as admin
+    3.2- Add new host (example : 127.0.0.1 my.new.host.com)

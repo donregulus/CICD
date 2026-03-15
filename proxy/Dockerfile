@@ -14,4 +14,4 @@ RUN chmod +x /certs.sh
 COPY openssl.cnf /openssl.cnf
 
 # Generate self-signed certificates
-RUN /certs.sh
+RUN ["/bin/bash", "-c","/certs.sh"]
