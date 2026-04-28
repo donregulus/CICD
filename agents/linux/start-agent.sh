@@ -1,4 +1,4 @@
 #!/bin/bash
-curl -sO http://172.17.0.1:8080/jnlpJars/agent.jar
-java -jar agent.jar -url http://172.17.0.1:8080/ -secret 8c042ce39d6b84d59ad3853af687f9876714acdeb9226a238a0de33b307d8f42 -name "Docker-Agent-Linux" -webSocket -workDir "/home/jenkins/agent"
+# Connect to Jenkins via internal Docker network (not external DNS)
+curl -sO http://jenkins:8080/jnlpJars/agent.jar && java -jar agent.jar -url http://jenkins:8080/ -secret 59ff96ff5a96fbb4943662aad15b5fd2298a7822b53884dfda3e0b22fa9989a0 -name "Docker-Agent-Linux" -webSocket -workDir "/home/jenkins_home"
 exit 0
