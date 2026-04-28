@@ -35,7 +35,7 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
     python3-pip \    
     clang-tidy \
     curl \
-    openjdk-17-jdk \
+    openjdk-21-jdk \
     vim \    
     valgrind && \  
     rm -rf /var/lib/apt/lists/*  &&\
