@@ -51,7 +51,7 @@ RUN make install
 
 # Install python tools
 RUN rm /usr/lib/python*/EXTERNALLY-MANAGED && \  
-    pip3 install gcovr conan  pycobertura pre-commit
+    pip3 install gcovr conan pycobertura lcov-cobertura pre-commit
 
 # Create conan default profile
 RUN conan profile detect 
