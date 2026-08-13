@@ -1,4 +1,4 @@
-FROM nginx:trixie-perl
+FROM nginx:1.31.3-alpine3.24-slim
 
 # Install openssl to generate keys
 RUN apt-get -y update; apt-get install -y sudo; apt-get install -y openssl
